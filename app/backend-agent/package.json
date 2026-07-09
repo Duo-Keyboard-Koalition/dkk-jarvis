@@ -1,0 +1,21 @@
+{
+  "name": "jarvis-agent-backend",
+  "version": "1.0.0",
+  "description": "WebSocket agent backend for JARVIS AR Assistant",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "agent",
+    "websocket",
+    "jarvis",
+    "ar"
+  ],
+  "author": "DKK",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.14.2"
+  }
+}
