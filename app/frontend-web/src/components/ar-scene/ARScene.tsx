@@ -622,13 +622,12 @@ const ARScene = React.forwardRef<ARSceneHandles, ARSceneProps>((props, ref) => {
       dragState.isDraggingWithMouse = true;
       const worldPos = new THREE.Vector3();
       windowObj.group.getWorldPosition(worldPos);
-      // Always build a fresh camera-facing plane so ray-plane intersection is
-      // reliable on every drag, regardless of where the window was previously dropped.
-      const freshNormal = new THREE.Vector3()
-        .subVectors(cameraRef.current.position, worldPos)
-        .normalize();
-      if (freshNormal.lengthSq() < 0.001) freshNormal.set(0, 0, 1);
-      dragState.dragPlane.setFromNormalAndCoplanarPoint(freshNormal, worldPos);
+      // Plane perpendicular to the camera's view axis passing through the window.
+      // Using the view direction (not camera→window) keeps the window at constant
+      // depth during drag, so perspective scale never changes while moving laterally.
+      const viewNormal = new THREE.Vector3();
+      cameraRef.current.getWorldDirection(viewNormal).negate();
+      dragState.dragPlane.setFromNormalAndCoplanarPoint(viewNormal, worldPos);
       // Compute offset: ray hit on plane → window centre delta
       const ray = new THREE.Raycaster();
       ray.setFromCamera(currentMouse, cameraRef.current);
